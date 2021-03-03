@@ -50,8 +50,15 @@ const table = base.getTable("Posts");
 const query = await table.selectRecordsAsync();
 const filteredRecords = query.records.filter(record => {
     const status = record.getCellValue('Status');
-    return status === "pending"
+    const post = record.getCellValue('Post');
+    const platforms = record.getCellValue('Platforms');
+
+    return (post && platforms && (status === "pending" || !status));
 });
+
+if (filteredRecords.length === 0) {
+    console.log("No records found with status `pending` or empty");
+}
 
 for (let record of filteredRecords) {
     const post = record.getCellValue('Post');
@@ -72,10 +79,12 @@ for (let record of filteredRecords) {
     if (response) {
         let status;
         if (Array.isArray(response)) {
-            status = response.map(x => x.status).every(x => x === "success") ? "success" : "error";
+            status = response.map(x => x.status).every(x => x === "success" || x === "scheduled") ? "success" : "error";
         } else {
             status = response.status;
         }
+
+        console.log(response);
 
         await table.updateRecordAsync(record, {
             "Status": status
