@@ -16,18 +16,18 @@
 const API_KEY = 'Your API Key'; // Get a free key at ayrshare.com
 
 const sendPost = async (data) => {
-    const { post, platforms, images_uls, profileKeys, scheduleDate } = data;
+    const { post, platforms, media_uls, profileKeys, scheduleDate } = data;
 
     const body = Object.assign({},
         post && { post },
         platforms && { platforms },
         profileKeys && { profileKeys: profileKeys.split(",") },
-        images_uls && Array.isArray(images_uls) && images_uls.length > 0 && { media_urls: images_uls.map(image => image.url) },
+        media_uls && Array.isArray(media_uls) && media_uls.length > 0 && { media_urls: media_uls.map(image => image.url) },
         scheduleDate && { scheduleDate }
     );
 
-    if (images_uls && Array.isArray(images_uls) && images_uls.length > 0) {
-        body.media_urls = images_uls.map(image => image.url);
+    if (media_uls && Array.isArray(media_uls) && media_uls.length > 0) {
+        body.media_urls = media_uls.map(image => image.url);
     }
 
     if (profileKeys) {
@@ -71,7 +71,7 @@ for (let record of filteredRecords) {
         {
             post,
             platforms: platforms.map(x => x.name),
-            image_urls: images,
+            media_uls: images,
             profileKeys,
             scheduleDate,
         });
